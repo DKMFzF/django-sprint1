@@ -3,11 +3,9 @@
 {% block title %}Публикации в категории {{ category_slug }}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <h1>Публикации в категории {{ category_slug }}</h1>
-  {% for post in posts %}
-    <hr>
-    {% include 'blog/includes/post.html' %}
-  {% endfor %}
-</div>
+<h1>Публикации в категории {{ category_slug }}</h1>
+{% for post in posts %}
+  <hr>
+  {% include 'blog/includes/post.html' %}
+{% endfor %}
 {% endblock %}
