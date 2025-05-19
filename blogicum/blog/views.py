@@ -1,8 +1,13 @@
 from django.http import Http404
 from django.shortcuts import render
 
-posts = {
-    0: {
+# я сделал как вы сказали, но система не пропустила такого поворота
+# тесты упали при отправки задания на проверку
+# так что я оставил как было, как написанно в задании
+# Но я вашу мысль понял, можете посмотреть в коммите (ed867e9)
+
+posts = [
+    {
         'id': 0,
         'location': 'Остров отчаянья',
         'date': '30 сентября 1659 года',
@@ -14,7 +19,7 @@ posts = {
                 полумёртвым на берег этого проклятого острова,
                 который назвал островом Отчаяния.''',
     },
-    1: {
+    {
         'id': 1,
         'location': 'Остров отчаянья',
         'date': '1 октября 1659 года',
@@ -30,7 +35,7 @@ posts = {
                 построить баркас, на котором и выбрались бы из этого
                 гиблого места.''',
     },
-    2: {
+    {
         'id': 2,
         'location': 'Остров отчаянья',
         'date': '25 октября 1659 года',
@@ -42,34 +47,25 @@ posts = {
                 Весь этот день я хлопотал  около вещей: укрывал и
                 укутывал их, чтобы не испортились от дождя.''',
     },
-}
+]
 
 
 def index(request):
     template = 'blog/index.html'
-    context = {'posts': reversed(list(posts.values()))}
+    context = {'posts': list(reversed(posts))}
     return render(request, template, context)
 
 
 def post_detail(request, id):
     template = 'blog/detail.html'
-    try:
-        post = posts[id]
-    except KeyError:
+    post = next((p for p in posts if p['id'] == id), None)
+    if not post:
         raise Http404(f"Пост с id {id} не найден")
-
     context = {'post': post}
     return render(request, template, context)
 
 
 def category_posts(request, category_slug):
     template = 'blog/category.html'
-    category_filtered = ([
-        post for post in posts.values()
-        if post['category'] == category_slug
-    ])
-    context = {
-        'category_slug': category_slug,
-        'posts': category_filtered,
-    }
+    context = {'category_slug': category_slug}
     return render(request, template, context)
