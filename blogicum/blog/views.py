@@ -57,13 +57,17 @@ def post_detail(request, id):
         post = posts[id]
     except KeyError:
         raise Http404(f"Пост с id {id} не найден")
-    
+
     context = {'post': post}
     return render(request, template, context)
 
+
 def category_posts(request, category_slug):
     template = 'blog/category.html'
-    category_filtered = [post for post in posts.values() if post['category'] == category_slug]
+    category_filtered = ([
+        post for post in posts.values()
+        if post['category'] == category_slug
+    ])
     context = {
         'category_slug': category_slug,
         'posts': category_filtered,
