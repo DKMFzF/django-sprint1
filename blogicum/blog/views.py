@@ -1,7 +1,8 @@
+from django.http import Http404
 from django.shortcuts import render
 
-posts = [
-    {
+posts = {
+    0: {
         'id': 0,
         'location': 'Остров отчаянья',
         'date': '30 сентября 1659 года',
@@ -13,7 +14,7 @@ posts = [
                 полумёртвым на берег этого проклятого острова,
                 который назвал островом Отчаяния.''',
     },
-    {
+    1: {
         'id': 1,
         'location': 'Остров отчаянья',
         'date': '1 октября 1659 года',
@@ -29,7 +30,7 @@ posts = [
                 построить баркас, на котором и выбрались бы из этого
                 гиблого места.''',
     },
-    {
+    2: {
         'id': 2,
         'location': 'Остров отчаянья',
         'date': '25 октября 1659 года',
@@ -41,23 +42,30 @@ posts = [
                 Весь этот день я хлопотал  около вещей: укрывал и
                 укутывал их, чтобы не испортились от дождя.''',
     },
-]
+}
 
 
 def index(request):
     template = 'blog/index.html'
-    context = {'posts': reversed(posts)}
+    context = {'posts': reversed(list(posts.values()))}
     return render(request, template, context)
 
 
 def post_detail(request, id):
     template = 'blog/detail.html'
-    post = next((p for p in posts if p['id'] == id), None)
+    try:
+        post = posts[id]
+    except KeyError:
+        raise Http404(f"Пост с id {id} не найден")
+    
     context = {'post': post}
     return render(request, template, context)
 
-
 def category_posts(request, category_slug):
     template = 'blog/category.html'
-    context = {'category_slug': category_slug}
+    category_filtered = [post for post in posts.values() if post['category'] == category_slug]
+    context = {
+        'category_slug': category_slug,
+        'posts': category_filtered,
+    }
     return render(request, template, context)
