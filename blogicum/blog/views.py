@@ -1,10 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render
 
-# я сделал как вы сказали, но система не пропустила такого поворота
-# тесты упали при отправки задания на проверку
-# так что я оставил как было, как написанно в задании
-
+# Оригинальный список постов — оставляем
 posts = [
     {
         'id': 0,
@@ -48,6 +45,8 @@ posts = [
     },
 ]
 
+posts_by_id = {post['id']: post for post in posts}
+
 
 def index(request):
     template = 'blog/index.html'
@@ -57,9 +56,9 @@ def index(request):
 
 def post_detail(request, id):
     template = 'blog/detail.html'
-    post = next((p for p in posts if p['id'] == id), None)
+    post = posts_by_id.get(id)
     if not post:
-        raise Http404(f"Пост с id {id} не найден")
+        raise Http404(f'Пост с id {id} не найден')
     context = {'post': post}
     return render(request, template, context)
 
