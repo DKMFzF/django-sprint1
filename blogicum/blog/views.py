@@ -1,7 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render
 
-# Оригинальный список постов — оставляем
 posts = [
     {
         'id': 0,
